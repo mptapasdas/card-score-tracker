@@ -4,3 +4,13 @@
 *.log
 node_modules/
 .vercel/
+
+# Next.js
+.next/
+out/
+
+# Env
+.env*.local
+
+# TypeScript
+*.tsbuildinfo
