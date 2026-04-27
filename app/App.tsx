@@ -7,6 +7,8 @@ import { Masthead } from "@/components/Masthead";
 import { Colophon } from "@/components/Colophon";
 import { GamesList } from "@/components/GamesList";
 import { GameView } from "@/components/GameView";
+import { BackgroundCards } from "@/components/BackgroundCards";
+import { CardCursor } from "@/components/CardCursor";
 
 export function App() {
   const [mounted, setMounted] = useState(false);
@@ -24,6 +26,8 @@ export function App() {
 
   return (
     <ConfirmProvider>
+      <BackgroundCards />
+      <CardCursor />
       <div className="grain" aria-hidden="true" />
       <Masthead />
       <main className="stage">

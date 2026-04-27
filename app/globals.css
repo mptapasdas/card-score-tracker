@@ -67,6 +67,119 @@ body {
   line-height: 1.5;
 }
 
+/* ----- ambient playing cards -------------------------------- */
+.bg-cards {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.bg-card-wrap {
+  --repel-x: 0px;
+  --repel-y: 0px;
+  --rotate-base: 0deg;
+  --drift-x: 0px;
+  --drift-y: 0px;
+  --card-scale: 1;
+  --float-duration: 22s;
+  --float-delay: 0s;
+  position: absolute;
+  transform: translate3d(var(--repel-x), var(--repel-y), 0);
+  will-change: transform;
+}
+
+.bg-card {
+  position: relative;
+  width: calc(56px * var(--card-scale));
+  height: calc(80px * var(--card-scale));
+  background: linear-gradient(180deg, #fbf3df 0%, var(--paper) 100%);
+  border: 1px solid rgba(201, 182, 143, 0.55);
+  border-radius: 5px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 10px 20px -10px rgba(26, 22, 18, 0.28),
+    0 2px 4px -2px rgba(26, 22, 18, 0.18);
+  color: var(--ink);
+  font-family: var(--display);
+  opacity: 0;
+  transform: rotate(var(--rotate-base)) translate(0, 0);
+  animation:
+    card-deal 1.4s var(--ease-soft) var(--float-delay) forwards,
+    card-float var(--float-duration) ease-in-out calc(var(--float-delay) + 1.4s) infinite;
+  will-change: transform, opacity;
+}
+
+.bg-card--red { color: var(--bordeaux); }
+
+.bg-card__corner {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  font-variation-settings: "opsz" 40, "SOFT" 40;
+}
+.bg-card__corner--tl { top: 5px; left: 6px; }
+.bg-card__corner--br {
+  bottom: 5px;
+  right: 6px;
+  transform: rotate(180deg);
+}
+
+.bg-card__rank {
+  font-size: calc(13px * var(--card-scale));
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.bg-card__suit {
+  font-size: calc(12px * var(--card-scale));
+  margin-top: 1px;
+}
+
+.bg-card__center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: calc(24px * var(--card-scale));
+  opacity: 0.55;
+  font-family: var(--display);
+}
+
+@keyframes card-deal {
+  0% {
+    opacity: 0;
+    transform: rotate(calc(var(--rotate-base) + 28deg)) translate(0, -40px);
+  }
+  100% {
+    opacity: 0.65;
+    transform: rotate(var(--rotate-base)) translate(0, 0);
+  }
+}
+
+@keyframes card-float {
+  0%, 100% {
+    transform: rotate(var(--rotate-base)) translate(0, 0);
+  }
+  25% {
+    transform:
+      rotate(calc(var(--rotate-base) + 2deg))
+      translate(calc(var(--drift-x) * 0.5), calc(var(--drift-y) * 0.3));
+  }
+  50% {
+    transform:
+      rotate(calc(var(--rotate-base) - 2deg))
+      translate(var(--drift-x), var(--drift-y));
+  }
+  75% {
+    transform:
+      rotate(calc(var(--rotate-base) + 1deg))
+      translate(calc(var(--drift-x) * 0.3), calc(var(--drift-y) * 0.6));
+  }
+}
+
 .grain {
   position: fixed;
   inset: 0;
@@ -978,6 +1091,82 @@ body {
 .leaderboard__list .rank:nth-child(2) { animation-delay: 0.05s; }
 .leaderboard__list .rank:nth-child(3) { animation-delay: 0.10s; }
 .leaderboard__list .rank:nth-child(4) { animation-delay: 0.15s; }
+
+/* ----- card cursor ------------------------------------------ */
+.card-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-soft);
+  transform: translate3d(-100px, -100px, 0);
+}
+
+.card-cursor.is-visible { opacity: 1; }
+
+.card-cursor__arrow {
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 2px 2px rgba(26, 22, 18, 0.25))
+          drop-shadow(0 6px 10px rgba(26, 22, 18, 0.22));
+  transform-origin: 0.6px 0.6px;
+  transition:
+    transform 0.2s var(--ease-spring),
+    filter 0.2s var(--ease-soft);
+  will-change: transform, filter;
+}
+
+.card-cursor.is-hot .card-cursor__arrow {
+  transform: scale(1.22);
+  filter: drop-shadow(0 2px 2px rgba(26, 22, 18, 0.3))
+          drop-shadow(0 8px 14px rgba(138, 101, 39, 0.45))
+          drop-shadow(0 0 0.5px rgba(168, 129, 59, 0.9));
+}
+
+.card-cursor.is-pressed .card-cursor__arrow {
+  transform: scale(0.88);
+  transition-duration: 0.08s;
+}
+
+.card-cursor.is-hot.is-pressed .card-cursor__arrow {
+  transform: scale(1.08);
+}
+
+body.has-card-cursor,
+body.has-card-cursor * {
+  cursor: none !important;
+}
+
+/* Restore native cursor inside open dialogs (they render on the browser's
+   top layer, above our custom cursor) */
+body.has-card-cursor dialog[open],
+body.has-card-cursor dialog[open] * {
+  cursor: auto !important;
+}
+body.has-card-cursor dialog[open] button,
+body.has-card-cursor dialog[open] [role="button"],
+body.has-card-cursor dialog[open] a,
+body.has-card-cursor dialog[open] label.player-field,
+body.has-card-cursor dialog[open] label.field {
+  cursor: pointer !important;
+}
+body.has-card-cursor dialog[open] input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]),
+body.has-card-cursor dialog[open] textarea {
+  cursor: text !important;
+}
+
+/* Hide the custom arrow while any dialog is open so there's no ghost */
+body.has-card-cursor:has(dialog[open]) .card-cursor {
+  opacity: 0 !important;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .card-cursor { display: none; }
+}
 
 /* ----- responsive tweaks ------------------------------------ */
 @media (max-width: 640px) {
