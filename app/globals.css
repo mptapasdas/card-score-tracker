@@ -916,6 +916,59 @@ body {
 }
 .player-field input:focus { outline: none; }
 
+.player-field__remove {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-3);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.player-field__remove:hover,
+.player-field__remove:focus-visible {
+  background: rgba(143, 50, 48, 0.1);
+  color: var(--bordeaux);
+  outline: none;
+}
+
+.add-player {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px dashed var(--rule);
+  border-radius: var(--radius-s);
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.add-player:hover,
+.add-player:focus-visible {
+  border-color: var(--brass);
+  color: var(--brass);
+  background: rgba(168, 129, 59, 0.06);
+  outline: none;
+}
+.add-player span {
+  font-size: 16px;
+  line-height: 1;
+}
+
 .error {
   color: var(--bordeaux);
   font-size: 13px;

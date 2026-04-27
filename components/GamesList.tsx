@@ -23,9 +23,10 @@ export function GamesList({ games }: Props) {
 
   const handleCreate = (name: string, players: string[]): string | null => {
     if (!name) return "Give the game a name.";
-    if (players.some((p) => !p)) return "All four seats need a name.";
+    if (players.some((p) => !p)) return "Every seat needs a name.";
     const lower = players.map((p) => p.toLowerCase());
-    if (new Set(lower).size !== 4) return "Players must have distinct names.";
+    if (new Set(lower).size !== players.length)
+      return "Players must have distinct names.";
     actions.createGame(name, players);
     return null;
   };

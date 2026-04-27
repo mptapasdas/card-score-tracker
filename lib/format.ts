@@ -1,4 +1,10 @@
-export const ROMANS = ["I", "II", "III", "IV"] as const;
+export const ROMANS = [
+  "I", "II", "III", "IV", "V", "VI",
+  "VII", "VIII", "IX", "X", "XI", "XII",
+] as const;
+
+export const MIN_PLAYERS = 4;
+export const MAX_PLAYERS = 12;
 
 export const uid = () =>
   `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
